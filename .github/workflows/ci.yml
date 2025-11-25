@@ -1,0 +1,40 @@
+name: Continuous Integration (CI) Checks
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  check_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install CI tools
+        run: pip install flake8 black mypy
+
+      - name: Run Linting (Flake8)
+        run: |
+          # Ignores E501 (line too long, let Black handle it)
+          flake8 . --count --exit-config=.flake8 --max-complexity=10 --max-line-length=120 --statistics
+
+      - name: Check Formatting (Black)
+        run: black --check .
+
+      - name: Run Type Checking (Mypy)
+        run: mypy --install-types --non-interactive src/
+
+      - name: Run Unit Tests (Pytest)
+        run: pytest
