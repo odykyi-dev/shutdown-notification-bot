@@ -24,7 +24,7 @@ class DaySchedule(BaseModel):
         Parses the raw time strings into timezone-aware datetime objects
         for a specific queue.
         """
-        outages = []
+        outages: List[Dict] = []
         if queue_id not in self.queues:
             return outages
 

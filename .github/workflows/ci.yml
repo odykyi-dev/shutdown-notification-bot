@@ -52,7 +52,7 @@ jobs:
         run: pip install -r requirements.txt mypy
 
       - name: Run Type Checking (Mypy)
-        run: mypy --install-types --non-interactive src/
+        run: mypy --install-types --non-interactive --explicit-package-bases .
 
 
   # ===================
@@ -74,4 +74,4 @@ jobs:
         run: pip install -r requirements.txt pytest
 
       - name: Run Unit Tests
-        run: pytest
+        run: PYTHONPATH=. pytest

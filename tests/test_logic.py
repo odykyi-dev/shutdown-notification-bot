@@ -1,5 +1,4 @@
 import unittest
-from datetime import datetime
 from zoneinfo import ZoneInfo
 from logic import calculate_schedule_changes
 from models import DaySchedule
