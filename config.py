@@ -9,10 +9,7 @@ class Config(BaseSettings):
     ACCOUNT_NUMBER: str
     LOG_LEVEL: str = "INFO"
 
-    model_config = {
-        "env_file": ".env",
-        "extra": "ignore"
-    }
+    model_config = {"env_file": ".env", "extra": "ignore"}
 
 
 settings = Config()

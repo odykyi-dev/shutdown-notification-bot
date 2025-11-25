@@ -11,10 +11,7 @@ class ShutdownSlot(BaseModel):
     end_time: str = Field(alias="to")
     status: int
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        extra='ignore'
-    )
+    model_config = ConfigDict(populate_by_name=True, extra="ignore")
 
 
 class DaySchedule(BaseModel):
@@ -33,16 +30,18 @@ class DaySchedule(BaseModel):
 
         for slot in self.queues[queue_id]:
             # Use strptime to convert to a naive datetime object
-            start_dt = datetime.strptime(f"{self.eventDate} {slot.start_time}", "%d.%m.%Y %H:%M").replace(tzinfo=tzinfo)
+            start_dt = datetime.strptime(
+                f"{self.eventDate} {slot.start_time}", "%d.%m.%Y %H:%M"
+            ).replace(tzinfo=tzinfo)
 
             # We don't need the end_dt for the reminder calculation, but we'll include it for completeness.
-            end_dt = datetime.strptime(f"{self.eventDate} {slot.end_time}", "%d.%m.%Y %H:%M").replace(tzinfo=tzinfo)
+            end_dt = datetime.strptime(
+                f"{self.eventDate} {slot.end_time}", "%d.%m.%Y %H:%M"
+            ).replace(tzinfo=tzinfo)
 
-            outages.append({
-                "start": start_dt,
-                "end": end_dt,
-                "raw_hours": slot.shutdownHours
-            })
+            outages.append(
+                {"start": start_dt, "end": end_dt, "raw_hours": slot.shutdownHours}
+            )
         return outages
 
 

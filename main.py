@@ -9,7 +9,7 @@ from logic import (
     process_schedule_changes,
     process_due_reminders,
     should_check_api,
-    cleanup_past_reminders
+    cleanup_past_reminders,
 )
 from models import ScheduleRoot, DaySchedule
 from database.client import get_db_connection, close_db_connection
@@ -46,15 +46,21 @@ async def main():
 
             if queue_data:
                 schedule_root = ScheduleRoot.model_validate(queue_data)
-                queue_id = f"{schedule_root.current.queue}.{schedule_root.current.subQueue}"
+                queue_id = (
+                    f"{schedule_root.current.queue}.{schedule_root.current.subQueue}"
+                )
 
                 for schedule in schedule_root.schedule:
                     event_date = schedule.eventDate
-                    previous_value = await schedules_collection.find_one({"eventDate": event_date})
+                    previous_value = await schedules_collection.find_one(
+                        {"eventDate": event_date}
+                    )
 
                     # --- PREPARE DATA ---
                     data_to_save = schedule.model_dump()
-                    data_to_save["valid_until"] = datetime.now(ZoneInfo(settings.TIMEZONE)) + timedelta(days=2)
+                    data_to_save["valid_until"] = datetime.now(
+                        ZoneInfo(settings.TIMEZONE)
+                    ) + timedelta(days=2)
 
                     # 1. Determine previous state
                     if previous_value:
@@ -64,9 +70,7 @@ async def main():
 
                     # 2. Calculate changes
                     changes = calculate_schedule_changes(
-                        previous_schedule,
-                        schedule,
-                        queue_id
+                        previous_schedule, schedule, queue_id
                     )
 
                     # 3. Check for any detected changes
@@ -83,14 +87,14 @@ async def main():
                             queue_id,
                             bot,
                             settings.TELEGRAM_GROUP,
-                            event_date
+                            event_date,
                         )
 
                         # Save/Update the Schedule Document itself
                         await schedules_collection.update_one(
                             {"eventDate": event_date},  # Filter
                             {"$set": data_to_save},  # New data
-                            upsert=True  # Insert if new
+                            upsert=True,  # Insert if new
                         )
                     else:
                         logger.info(f"Schedule for {event_date} unchanged.")
@@ -98,8 +102,12 @@ async def main():
                 # Update Metadata (Reset the 30 min timer)
                 await metadata_collection.update_one(
                     {"_id": "api_status"},
-                    {"$set": {"last_api_check": datetime.now(ZoneInfo(settings.TIMEZONE))}},
-                    upsert=True
+                    {
+                        "$set": {
+                            "last_api_check": datetime.now(ZoneInfo(settings.TIMEZONE))
+                        }
+                    },
+                    upsert=True,
                 )
             else:
                 logger.warning("WARNING: API returned empty data.")

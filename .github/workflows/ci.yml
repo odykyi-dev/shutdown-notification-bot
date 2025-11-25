@@ -7,34 +7,71 @@ on:
     branches: [ master, develop ]
 
 jobs:
-  check_and_test:
+
+  # ==============
+  # 1. LINTING JOB
+  # ==============
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python & Cache
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Install CI tools
-        run: pip install flake8 black mypy
+      - name: Install Linting Tools
+        # Only install the tools needed for this specific job
+        run: pip install -r requirements.txt flake8 black
 
       - name: Run Linting (Flake8)
-        run: |
-            # The corrected command uses '--config=.flake8'
-            flake8 . --count --config=.flake8 --max-complexity=10 --max-line-length=120 --statistics
+        run: flake8 . --count --config=.flake8 --max-complexity=10 --max-line-length=120 --statistics
 
       - name: Check Formatting (Black)
         run: black --check .
 
+  # ====================
+  # 2. TYPE CHECKING JOB
+  # ====================
+  type_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python & Cache
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies and Mypy
+        run: pip install -r requirements.txt mypy
+
       - name: Run Type Checking (Mypy)
         run: mypy --install-types --non-interactive src/
 
-      - name: Run Unit Tests (Pytest)
+
+  # ===================
+  # 3. UNIT TESTING JOB
+  # ===================
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python & Cache
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies and Pytest
+        run: pip install -r requirements.txt pytest
+
+      - name: Run Unit Tests
         run: pytest
