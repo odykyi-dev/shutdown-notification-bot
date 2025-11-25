@@ -27,8 +27,8 @@ jobs:
 
       - name: Run Linting (Flake8)
         run: |
-          # Ignores E501 (line too long, let Black handle it)
-          flake8 . --count --exit-config=.flake8 --max-complexity=10 --max-line-length=120 --statistics
+            # The corrected command uses '--config=.flake8'
+            flake8 . --count --config=.flake8 --max-complexity=10 --max-line-length=120 --statistics
 
       - name: Check Formatting (Black)
         run: black --check .
