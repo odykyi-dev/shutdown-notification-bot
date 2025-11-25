@@ -12,7 +12,8 @@ class PowerAPIService:
         "Accept": "application/json, text/plain, */*",
         "Origin": "https://svitlo.oe.if.ua",
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/142.0.0.0 Safari/537.36",
         "Referer": "https://svitlo.oe.if.ua/"
     }
 
@@ -29,7 +30,7 @@ class PowerAPIService:
 
         try:
             response = requests.post(cls.BASE_URL, headers=cls.HEADERS, data=data, timeout=30)
-            
+
             if 'application/json' in response.headers.get('Content-Type', ''):
                 return response.json()
         except Exception as e:

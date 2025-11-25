@@ -25,7 +25,7 @@ async def main():
 
     # Initialize Bot
     bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
-    
+
     try:
         db = await get_db_connection()
         schedules_collection = db["schedules"]
@@ -89,8 +89,8 @@ async def main():
                         # Save/Update the Schedule Document itself
                         await schedules_collection.update_one(
                             {"eventDate": event_date},  # Filter
-                            {"$set": data_to_save},     # New data
-                            upsert=True                 # Insert if new
+                            {"$set": data_to_save},  # New data
+                            upsert=True  # Insert if new
                         )
                     else:
                         logger.info(f"Schedule for {event_date} unchanged.")
@@ -104,7 +104,7 @@ async def main():
             else:
                 logger.warning("WARNING: API returned empty data.")
         else:
-            logger.info("WARNING: API check skipped (Less than 30 mins since last check).")
+            logger.info("API check skipped (Less than 30 mins since last check).")
 
         # --- PHASE 3: CLEANUP ---
         logger.info("Running cleanup...")
@@ -118,6 +118,7 @@ async def main():
         await bot.session.close()
         await close_db_connection()
         logger.info("Script finished.")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

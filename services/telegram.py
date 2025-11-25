@@ -18,7 +18,7 @@ async def send_group_message(group_id: str, message_text: str, bot: Bot):
             text=message_text,
             parse_mode='HTML'
         )
-        logger.info(f"Successfully sent notification to group.")
+        logger.info("Successfully sent notification to group.")
     except Exception as e:
         # Common error: Token is wrong, or the bot was removed from the group
         logger.error(f"ERROR: sending message to Telegram group {group_id}: {e}")

@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 from typing import List, Tuple, Dict, Set
 from zoneinfo import ZoneInfo
 from aiogram import Bot
@@ -123,7 +123,8 @@ async def process_schedule_changes(
 
         # Notification: New outage scheduled
         notifications.append(
-            f"⚠️ <b>NEW OUTAGE:</b> Off from <b>{start_time.strftime('%H:%M')}</b> to <b>{end_time.strftime('%H:%M')}</b>."
+            f"⚠️ <b>NEW OUTAGE:</b> Off from <b>{start_time.strftime('%H:%M')}</b> to "
+            f"<b>{end_time.strftime('%H:%M')}</b>."
         )
     if notifications:
         header = f"⚡ <b>SCHEDULE UPDATE</b> for Queue {queue_id} on <b>{event_date}</b>:\n\n"
@@ -135,7 +136,7 @@ async def process_due_reminders(reminders_col, bot: Bot, group_id: str):
     """
     Checks for reminders that are due NOW (or slightly in the past) and not sent.
     """
-    now = datetime.now(tzinfo)
+    now = datetime.now(timezone.utc)
     # We look back 20 minutes just in case the Cron was slightly delayed
     time_window = now - timedelta(minutes=20)
 
@@ -179,8 +180,8 @@ async def should_check_api(metadata_col) -> bool:
     if not doc:
         return True
 
-    last_check = doc["last_api_check"].replace(tzinfo=tzinfo)
-    diff = datetime.now(tzinfo) - last_check
+    last_check = doc["last_api_check"].replace(tzinfo=timezone.utc)
+    diff = datetime.now(timezone.utc) - last_check
     return diff > timedelta(minutes=30)
 
 
