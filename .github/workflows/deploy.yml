@@ -7,14 +7,11 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  IMAGE_BASE: ${{ vars.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ vars.REPO_NAME }}/${{ vars.IMAGE_NAME }}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    env:
-      DOCKER_REPO: ${{ vars.REGION }}-docker.pkg.dev
-      IMAGE_BASE: ${{ env.DOCKER_REPO }}/${{ secrets.GCP_PROJECT_ID }}/${{ vars.REPO_NAME }}/${{ vars.IMAGE_NAME }}
 
     permissions:
       contents: 'read'
@@ -33,7 +30,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Configure Docker
-        run: gcloud auth configure-docker ${{ env.DOCKER_REPO }}
+        run: gcloud auth configure-docker ${{ vars.REGION }}-docker.pkg.dev
 
       - name: Build and Push Container
         run: |
