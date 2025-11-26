@@ -40,6 +40,6 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           job: ${{ vars.IMAGE_NAME }}
-          image: ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ vars.REPO_NAME }}/${{ vars.IMAGE_NAME }}:${{ github.sha }}
+          image: ${{ vars.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ vars.REPO_NAME }}/${{ vars.IMAGE_NAME }}:${{ github.sha }}
           region: ${{ vars.REGION }}
           flags: '--execute-now'
