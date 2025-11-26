@@ -137,8 +137,13 @@ async def process_due_reminders(reminders_col, bot: Bot, group_id: str):
 
     count = 0
     async for reminder in cursor:
-        start_time = reminder["outage_start"].replace(tzinfo=timezone.utc).astimezone(tzinfo)
-        end_time = reminder["outage_end"].replace(tzinfo=timezone.utc).astimezone(tzinfo)
+        # convert to correct TZ from UTC
+        start_time = (
+            reminder["outage_start"].replace(tzinfo=timezone.utc).astimezone(tzinfo)
+        )
+        end_time = (
+            reminder["outage_end"].replace(tzinfo=timezone.utc).astimezone(tzinfo)
+        )
 
         msg = (
             f"⚠️ <b>REMINDER:</b> Power outage starts in <b>15 minutes</b>!\n"
