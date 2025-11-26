@@ -129,7 +129,7 @@ async def process_due_reminders(reminders_col, bot: Bot, group_id: str):
     """
     now = datetime.now(timezone.utc)
     # We look back 20 minutes just in case the Cron was slightly delayed
-    time_window = now - timedelta(minutes=3600)
+    time_window = now - timedelta(minutes=20)
 
     cursor = reminders_col.find(
         {"sent": False, "notify_at": {"$lte": now, "$gte": time_window}}
