@@ -1,10 +1,11 @@
+from typing import Optional
 from pymongo import AsyncMongoClient
 from pymongo.server_api import ServerApi
 from config import settings
 
 
 class Database:
-    client: AsyncMongoClient = None
+    client: Optional[AsyncMongoClient] = None
 
 
 db = Database()
@@ -19,7 +20,7 @@ async def get_db_connection():
         if not mongodb_uri:
             raise Exception("MONGODB_URI environment variable not set.")
 
-        db.client = AsyncMongoClient(mongodb_uri, server_api=ServerApi('1'))
+        db.client = AsyncMongoClient(mongodb_uri, server_api=ServerApi("1"))
     return db.client["shutdown_schedule"]
 
 

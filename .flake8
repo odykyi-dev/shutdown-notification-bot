@@ -1,0 +1,14 @@
+[flake8]
+# Basic settings
+max-line-length = 120
+exclude =
+    .git,
+    __pycache__,
+    .github,
+    venv,
+    tests
+# W503 (Line break occurred before a binary operator) is ignored
+# because Black formatter prefers breaks before operators.
+# E203 (Whitespace before ':') is ignored because Black formatter uses it.
+ignore = W503, E203
+max-complexity = 10
