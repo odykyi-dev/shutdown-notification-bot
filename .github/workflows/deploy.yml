@@ -7,6 +7,8 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  DOCKER_REPO: ${{ vars.REGION }}-docker.pkg.dev
+  IMAGE_PATH: ${{ env.DOCKER_REPO }}/${{ env.PROJECT_ID }}/${{ vars.REPO_NAME }}/${{ vars.IMAGE_NAME }}:latest
 
 jobs:
   deploy:
@@ -29,17 +31,17 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Configure Docker
-        run: gcloud auth configure-docker ${{ vars.REGION }}-docker.pkg.dev
+        run: gcloud auth configure-docker ${{ vars.DOCKER_REPO }}
 
       - name: Build and Push Container
         run: |
-          docker build -t ${{ vars.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ vars.REPO_NAME }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} .
-          docker push ${{ vars.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ vars.REPO_NAME }}/${{ vars.IMAGE_NAME }}:${{ github.sha }}
+          docker build -t ${{ env.IMAGE_NAME }} .
+          docker push ${{ env.IMAGE_NAME }}
 
       - name: Deploy to Cloud Run Job
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          job: ${{ vars.IMAGE_NAME }}
-          image: ${{ vars.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ vars.REPO_NAME }}/${{ vars.IMAGE_NAME }}:${{ github.sha }}
+          job: ${{ env.IMAGE_NAME }}
+          image: ${{ vars.REGION }}
           region: ${{ vars.REGION }}
           flags: '--execute-now'
