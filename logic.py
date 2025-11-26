@@ -129,7 +129,7 @@ async def process_due_reminders(reminders_col, bot: Bot, group_id: str):
     """
     now = datetime.now(timezone.utc)
     # We look back 20 minutes just in case the Cron was slightly delayed
-    time_window = now - timedelta(minutes=20)
+    time_window = now - timedelta(minutes=3600)
 
     cursor = reminders_col.find(
         {"sent": False, "notify_at": {"$lte": now, "$gte": time_window}}
@@ -137,12 +137,12 @@ async def process_due_reminders(reminders_col, bot: Bot, group_id: str):
 
     count = 0
     async for reminder in cursor:
-        start_time = reminder["outage_start"].astimezone(tzinfo)
-        end_time = reminder["outage_end"].astimezone(tzinfo)
+        start_time = reminder["outage_start"].replace(tzinfo=timezone.utc).astimezone(tzinfo)
+        end_time = reminder["outage_end"].replace(tzinfo=timezone.utc).astimezone(tzinfo)
 
         msg = (
-            f"⚠️ **REMINDER:** Power outage starts in <b>15 minutes</b>!\n"
-            f"🕒 Time: {start_time.strftime('%H:%M')} - {end_time.strftime('%H:%M')}"
+            f"⚠️ <b>REMINDER:</b> Power outage starts in <b>15 minutes</b>!\n"
+            f"🕒 <b>Time: {start_time.strftime('%H:%M')} - {end_time.strftime('%H:%M')}</b>"
         )
 
         await send_group_message(group_id, msg, bot)

@@ -32,12 +32,7 @@ async def main():
         reminders_collection = db["reminders"]
         metadata_collection = db["metadata"]
 
-        # --- PHASE 1: NOTIFICATIONS (Runs Every 15 mins) ---
-        # Checks DB for reminders that are due NOW
-        logger.info("Checking for due reminders...")
-        await process_due_reminders(reminders_collection, bot, settings.TELEGRAM_GROUP)
-
-        # --- PHASE 2: API CHECK & SYNC (Runs Every 30 mins) ---
+        # --- PHASE 1: API CHECK & SYNC (Runs Every 30 mins) ---
         if await should_check_api(metadata_collection):
             logger.info("30 minutes passed. Fetching API...")
 
@@ -76,7 +71,6 @@ async def main():
                     # 3. Check for any detected changes
                     has_changes = changes["added"] or changes["removed"]
 
-                    # 4. CONDITIONAL WRITE-BACK LOGIC
                     if previous_schedule is None or has_changes:
                         logger.info(f"Updates detected for {event_date}")
 
@@ -113,6 +107,11 @@ async def main():
                 logger.warning("WARNING: API returned empty data.")
         else:
             logger.info("API check skipped (Less than 30 mins since last check).")
+
+        # --- PHASE 2: NOTIFICATIONS (Runs Every 15 mins) ---
+        # Checks DB for reminders that are due NOW
+        logger.info("Checking for due reminders...")
+        await process_due_reminders(reminders_collection, bot, settings.TELEGRAM_GROUP)
 
         # --- PHASE 3: CLEANUP ---
         logger.info("Running cleanup...")
