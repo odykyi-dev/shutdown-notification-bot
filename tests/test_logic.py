@@ -1,7 +1,7 @@
 import unittest
 from zoneinfo import ZoneInfo
-from logic import calculate_schedule_changes
-from models import DaySchedule
+from src.logic import calculate_schedule_changes
+from src.models import DaySchedule
 
 
 class TestLogic(unittest.TestCase):

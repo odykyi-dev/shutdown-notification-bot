@@ -164,7 +164,7 @@ async def process_due_reminders(reminders_col, bot: Bot, group_id: str):
 
 async def should_check_api(metadata_col) -> bool:
     """
-    Returns True if 30 minutes have passed since the last API check.
+    Returns True if 30 minutes have passed since the last API check. 
     """
     doc = await metadata_col.find_one({"_id": "api_status"})
 
@@ -173,7 +173,8 @@ async def should_check_api(metadata_col) -> bool:
 
     last_check = doc["last_api_check"].replace(tzinfo=timezone.utc)
     diff = datetime.now(timezone.utc) - last_check
-    return diff > timedelta(minutes=30)
+    # here is diff for 25 mins because can be twice skip for API
+    return diff > timedelta(minutes=25)
 
 
 async def cleanup_past_reminders(reminders_collection):

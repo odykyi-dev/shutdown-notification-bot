@@ -1,7 +1,7 @@
 from typing import Optional
 from pymongo import AsyncMongoClient
 from pymongo.server_api import ServerApi
-from config import settings
+from src.config import settings
 
 
 class Database:
