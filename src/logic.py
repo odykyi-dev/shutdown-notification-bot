@@ -120,7 +120,7 @@ def generate_notification_message(
 
     header = f"⚡ <b>SCHEDULE UPDATE</b> for Queue {queue_id} on <b>{event_date}</b>:\n\n"
     footer = f"\n\n<b>Total Outage Duration: {total_str}</b>"
-    
+
     return header + "\n".join(notifications) + footer
 
 
@@ -209,7 +209,7 @@ async def process_due_reminders(reminders_col, bot: Bot, group_id: str):
 
 async def should_check_api(metadata_col) -> bool:
     """
-    Returns True if 30 minutes have passed since the last API check. 
+    Returns True if 30 minutes have passed since the last API check.
     """
     doc = await metadata_col.find_one({"_id": "api_status"})
 
