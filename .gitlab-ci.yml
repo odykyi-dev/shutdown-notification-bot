@@ -32,7 +32,7 @@ type_check:
   before_script:
     - pip install -r requirements.txt mypy
   script:
-    - mypy --install-types --non-interactive --explicit-package-bases .
+    - PYTHONPATH=src mypy --install-types --non-interactive --explicit-package-bases .
 
 # ==========================================
 # 3. UNIT TESTING JOB
@@ -43,7 +43,7 @@ test:
   before_script:
     - pip install -r requirements.txt pytest
   script:
-    - export PYTHONPATH=.
+    - export PYTHONPATH=src
     - pytest
 
 # ==========================================
