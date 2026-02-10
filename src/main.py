@@ -82,6 +82,7 @@ async def main():
                             bot,
                             settings.TELEGRAM_GROUP,
                             event_date,
+                            schedule,
                         )
 
                         # Save/Update the Schedule Document itself
@@ -104,7 +105,7 @@ async def main():
                     upsert=True,
                 )
             else:
-                logger.warning("WARNING: API returned empty data.")
+                logger.warning("API returned empty data.")
         else:
             logger.info("API check skipped (Less than 30 mins since last check).")
 
@@ -118,7 +119,7 @@ async def main():
         await cleanup_past_reminders(reminders_collection)
 
     except Exception as e:
-        logger.exception(f"ERROR: An error occurred: {e}")
+        logger.exception(f"An error occurred: {e}")
 
     finally:
         # Cleanup Resources
