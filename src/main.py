@@ -82,6 +82,7 @@ async def main():
                             bot,
                             settings.TELEGRAM_GROUP,
                             event_date,
+                            schedule,
                         )
 
                         # Save/Update the Schedule Document itself
