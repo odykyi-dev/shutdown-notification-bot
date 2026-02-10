@@ -64,4 +64,4 @@ deploy:
     # Connect to Raspberry Pi and execute the deployment script
     - ssh -p 22 $SSH_USER@$SSH_HOST "bash -s" < deploy.sh
   only:
-    - main
+    - tags
