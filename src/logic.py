@@ -118,7 +118,9 @@ def generate_notification_message(
         f"{total_hours}h {total_minutes}m" if total_minutes else f"{total_hours}h"
     )
 
-    header = f"⚡ <b>SCHEDULE UPDATE</b> for Queue {queue_id} on <b>{event_date}</b>:\n\n"
+    header = (
+        f"⚡ <b>SCHEDULE UPDATE</b> for Queue {queue_id} on <b>{event_date}</b>:\n\n"
+    )
     footer = f"\n\n<b>Total Outage Duration: {total_str}</b>"
 
     return header + "\n".join(notifications) + footer
