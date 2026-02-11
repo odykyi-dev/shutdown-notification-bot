@@ -56,11 +56,13 @@ deploy:
     - apk add --no-cache openssh-client git
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    # $SSH_PRIVATE_KEY is now a file path, not the content
-    - cp "$SSH_PRIVATE_KEY" ~/.ssh/id_rsa
+    # Write the private key (using printf to preserve line breaks)
+    - printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 400 ~/.ssh/id_rsa
+    # Start ssh-agent and add key
     - eval $(ssh-agent -s)
     - ssh-add ~/.ssh/id_rsa
+    # Add host to known_hosts
     - ssh-keyscan -p 22 "$SSH_HOST" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
